@@ -21,7 +21,6 @@ import FilterListIcon from '@mui/icons-material/FilterList';
 import ClearIcon from '@mui/icons-material/Clear';
 import { apiService, Trade } from '../services/api';
 import { format } from 'date-fns';
-
 export default function Trades() {
   const [trades, setTrades] = useState<Trade[]>([]);
   const [loading, setLoading] = useState(true);
@@ -31,7 +30,6 @@ export default function Trades() {
     fromDate: '',
     toDate: '',
   });
-
   const fetchTrades = async () => {
     try {
       setLoading(true);
@@ -48,24 +46,19 @@ export default function Trades() {
       setLoading(false);
     }
   };
-
   useEffect(() => {
     fetchTrades();
   }, []);
-
   const handleFilterChange = (field: string, value: any) => {
     setFilters({ ...filters, [field]: value });
   };
-
   const handleApplyFilters = () => {
     fetchTrades();
   };
-
   const handleClearFilters = () => {
     setFilters({ symbol: '', side: '', fromDate: '', toDate: '' });
     setTimeout(() => fetchTrades(), 100);
   };
-
   if (loading && trades.length === 0) {
     return (
       <Box display="flex" justifyContent="center" alignItems="center" minHeight="400px">
@@ -73,13 +66,11 @@ export default function Trades() {
       </Box>
     );
   }
-
   return (
     <Box>
       <Typography variant="h4" gutterBottom sx={{ mb: 3, fontWeight: 600 }}>
         Executed Trades
       </Typography>
-
       <Card sx={{ mb: 3, p: 2 }}>
         <Box display="flex" alignItems="center" gap={2} mb={2}>
           <FilterListIcon />
@@ -158,7 +149,6 @@ export default function Trades() {
           </Grid>
         </Grid>
       </Card>
-
       <Card>
         <TableContainer>
           <Table>

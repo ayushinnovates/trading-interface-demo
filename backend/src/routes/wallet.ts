@@ -3,26 +3,11 @@ import { authenticate } from '../middleware/auth';
 import { walletService } from '../services/walletService';
 import { CustomError } from '../middleware/errorHandler';
 import { logger } from '../utils/logger';
-
 const router = Router();
-
-/**
- * @swagger
- * /api/v1/wallet:
- *   get:
- *     summary: Get wallet balance
- *     tags: [Wallet]
- *     security:
- *       - bearerAuth: []
- *     responses:
- *       200:
- *         description: Wallet balance
- */
 router.get('/', authenticate, async (req: Request, res: Response) => {
   try {
     const userId = (req as any).userId;
     const balance = await walletService.getBalance(userId);
-
     res.json({
       status: 'success',
       data: balance,
@@ -32,6 +17,4 @@ router.get('/', authenticate, async (req: Request, res: Response) => {
     throw new CustomError('Failed to fetch wallet balance', 500);
   }
 });
-
 export default router;
-

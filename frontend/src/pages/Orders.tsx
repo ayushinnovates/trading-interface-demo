@@ -26,7 +26,6 @@ import VisibilityIcon from '@mui/icons-material/Visibility';
 import CancelIcon from '@mui/icons-material/Cancel';
 import { apiService, Order, Instrument } from '../services/api';
 import { format } from 'date-fns';
-
 export default function Orders() {
   const [orders, setOrders] = useState<Order[]>([]);
   const [instruments, setInstruments] = useState<Instrument[]>([]);
@@ -41,7 +40,6 @@ export default function Orders() {
     quantity: '',
     price: '',
   });
-
   useEffect(() => {
     const fetchData = async () => {
       try {
@@ -57,10 +55,8 @@ export default function Orders() {
         setLoading(false);
       }
     };
-
     fetchData();
   }, []);
-
   const handlePlaceOrder = async () => {
     try {
       const orderData = {
@@ -71,7 +67,6 @@ export default function Orders() {
         quantity: parseInt(orderForm.quantity),
         price: orderForm.orderStyle === 'LIMIT' ? parseFloat(orderForm.price) : undefined,
       };
-
       await apiService.placeOrder(orderData);
       const updatedOrders = await apiService.getOrders();
       setOrders(updatedOrders);
@@ -88,7 +83,6 @@ export default function Orders() {
       alert(error.response?.data?.message || 'Failed to place order');
     }
   };
-
   const getStatusColor = (status: string) => {
     switch (status) {
       case 'EXECUTED':
@@ -103,12 +97,10 @@ export default function Orders() {
         return 'warning';
     }
   };
-
   const handleCancelOrder = async (orderId: string) => {
     if (!window.confirm('Are you sure you want to cancel this order?')) {
       return;
     }
-
     try {
       await apiService.cancelOrder(orderId);
       const updatedOrders = await apiService.getOrders();
@@ -117,7 +109,6 @@ export default function Orders() {
       alert(error.response?.data?.message || 'Failed to cancel order');
     }
   };
-
   const handleViewOrder = async (orderId: string) => {
     try {
       const order = await apiService.getOrder(orderId);
@@ -127,7 +118,6 @@ export default function Orders() {
       console.error('Error fetching order details:', error);
     }
   };
-
   if (loading) {
     return (
       <Box display="flex" justifyContent="center" alignItems="center" minHeight="400px">
@@ -135,7 +125,6 @@ export default function Orders() {
       </Box>
     );
   }
-
   return (
     <Box>
       <Box display="flex" justifyContent="space-between" alignItems="center" mb={3}>
@@ -153,7 +142,6 @@ export default function Orders() {
           Place Order
         </Button>
       </Box>
-
       <Card>
         <TableContainer>
           <Table>
@@ -256,11 +244,10 @@ export default function Orders() {
           </Table>
         </TableContainer>
       </Card>
-
-      <Dialog 
-        open={openDialog} 
-        onClose={() => setOpenDialog(false)} 
-        maxWidth="sm" 
+      <Dialog
+        open={openDialog}
+        onClose={() => setOpenDialog(false)}
+        maxWidth="sm"
         fullWidth
         PaperProps={{
           sx: {
@@ -412,4 +399,3 @@ export default function Orders() {
     </Box>
   );
 }
-

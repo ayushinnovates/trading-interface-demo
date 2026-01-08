@@ -17,11 +17,9 @@ import {
 import TrendingUpIcon from '@mui/icons-material/TrendingUp';
 import TrendingDownIcon from '@mui/icons-material/TrendingDown';
 import { apiService, PortfolioHolding } from '../services/api';
-
 export default function Portfolio() {
   const [holdings, setHoldings] = useState<PortfolioHolding[]>([]);
   const [loading, setLoading] = useState(true);
-
   useEffect(() => {
     const fetchPortfolio = async () => {
       try {
@@ -33,13 +31,10 @@ export default function Portfolio() {
         setLoading(false);
       }
     };
-
     fetchPortfolio();
-    // Refresh every 10 seconds to get updated prices
     const interval = setInterval(fetchPortfolio, 10000);
     return () => clearInterval(interval);
   }, []);
-
   const totalValue = holdings.reduce((sum, holding) => sum + holding.currentValue, 0);
   const totalInvested = holdings.reduce(
     (sum, holding) => sum + holding.quantity * (holding.averageBuyPrice || holding.averagePrice),
@@ -49,7 +44,6 @@ export default function Portfolio() {
   const totalUnrealizedPnL = holdings.reduce((sum, holding) => sum + (holding.unrealizedPnL || 0), 0);
   const totalPnL = totalRealizedPnL + totalUnrealizedPnL;
   const totalPnLPercent = totalInvested > 0 ? (totalPnL / totalInvested) * 100 : 0;
-
   if (loading) {
     return (
       <Box display="flex" justifyContent="center" alignItems="center" minHeight="400px">
@@ -57,13 +51,11 @@ export default function Portfolio() {
       </Box>
     );
   }
-
   return (
     <Box>
       <Typography variant="h4" gutterBottom sx={{ mb: 3, fontWeight: 600 }}>
         Portfolio Holdings
       </Typography>
-
       <Box sx={{ mb: 4 }}>
         <Grid container spacing={3}>
           <Grid item xs={12} md={3}>
@@ -152,7 +144,6 @@ export default function Portfolio() {
           </Grid>
         </Grid>
       </Box>
-
       <Card>
         <TableContainer>
           <Table>
@@ -195,7 +186,6 @@ export default function Portfolio() {
                   const realizedPnL = holding.realizedPnL || 0;
                   const totalPnL = holding.totalPnL || (realizedPnL + unrealizedPnL);
                   const unrealizedPnLPercent = holding.unrealizedPnLPercent || 0;
-
                   return (
                     <TableRow key={holding.symbol} hover>
                       <TableCell>

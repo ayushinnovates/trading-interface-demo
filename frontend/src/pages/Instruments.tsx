@@ -19,13 +19,11 @@ import RefreshIcon from '@mui/icons-material/Refresh';
 import TrendingUpIcon from '@mui/icons-material/TrendingUp';
 import TrendingDownIcon from '@mui/icons-material/TrendingDown';
 import { apiService, Instrument } from '../services/api';
-
 export default function Instruments() {
   const [instruments, setInstruments] = useState<Instrument[]>([]);
   const [loading, setLoading] = useState(true);
   const [refreshing, setRefreshing] = useState(false);
   const [lastUpdate, setLastUpdate] = useState<Date | null>(null);
-
   const fetchInstruments = async () => {
     try {
       setRefreshing(true);
@@ -39,14 +37,11 @@ export default function Instruments() {
       setRefreshing(false);
     }
   };
-
   useEffect(() => {
     fetchInstruments();
-    // Auto-refresh every 60 seconds (reduced frequency to avoid unnecessary API calls)
     const interval = setInterval(fetchInstruments, 60000);
     return () => clearInterval(interval);
   }, []);
-
   if (loading) {
     return (
       <Box display="flex" justifyContent="center" alignItems="center" minHeight="400px">
@@ -54,9 +49,7 @@ export default function Instruments() {
       </Box>
     );
   }
-
   const hasRealData = instruments.some(inst => inst.change !== undefined);
-
   return (
     <Box>
       <Box display="flex" justifyContent="space-between" alignItems="center" mb={3}>
@@ -69,8 +62,8 @@ export default function Instruments() {
               Last updated: {lastUpdate.toLocaleTimeString()}
             </Typography>
           )}
-          <IconButton 
-            onClick={fetchInstruments} 
+          <IconButton
+            onClick={fetchInstruments}
             disabled={refreshing}
             color="primary"
             title="Refresh prices"
@@ -79,13 +72,11 @@ export default function Instruments() {
           </IconButton>
         </Box>
       </Box>
-      
       {hasRealData && (
         <Alert severity="info" sx={{ mb: 2 }}>
-          📊 Real-time market data enabled - Prices update automatically from live market
+           Real-time market data enabled - Prices update automatically from live market
         </Alert>
       )}
-
       <Card>
         <TableContainer>
           <Table>
@@ -116,7 +107,6 @@ export default function Instruments() {
                 instruments.map((instrument) => {
                   const isPositive = (instrument.change || 0) >= 0;
                   const changePercent = instrument.changePercent || 0;
-                  
                   return (
                     <TableRow key={`${instrument.symbol}-${instrument.exchange}`} hover>
                       <TableCell>

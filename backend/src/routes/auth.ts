@@ -2,19 +2,7 @@ import { Router, Request, Response } from 'express';
 import { bajajApiClient } from '../services/bajajApiClient';
 import { authenticate } from '../middleware/auth';
 import { logger } from '../utils/logger';
-
 const router = Router();
-
-/**
- * @swagger
- * /api/v1/auth/authorize:
- *   get:
- *     summary: Get authorization URL for Bajaj Broking login
- *     tags: [Authentication]
- *     responses:
- *       200:
- *         description: Authorization URL
- */
 router.get('/authorize', (req: Request, res: Response) => {
   try {
     const authUrl = bajajApiClient.getAuthorizationUrl();
@@ -32,39 +20,15 @@ router.get('/authorize', (req: Request, res: Response) => {
     });
   }
 });
-
-/**
- * @swagger
- * /api/v1/auth/token:
- *   post:
- *     summary: Exchange authorization code for access token
- *     tags: [Authentication]
- *     requestBody:
- *       required: true
- *       content:
- *         application/json:
- *           schema:
- *             type: object
- *             required:
- *               - code
- *             properties:
- *               code:
- *                 type: string
- *     responses:
- *       200:
- *         description: Access token obtained
- */
 router.post('/token', async (req: Request, res: Response) => {
   try {
     const { code } = req.body;
-
     if (!code) {
       return res.status(400).json({
         status: 'error',
         message: 'Authorization code is required',
       });
     }
-
     const tokenResponse = await bajajApiClient.getAccessToken(code);
     res.json({
       status: 'success',
@@ -78,19 +42,6 @@ router.post('/token', async (req: Request, res: Response) => {
     });
   }
 });
-
-/**
- * @swagger
- * /api/v1/auth/profile:
- *   get:
- *     summary: Get user profile
- *     tags: [Authentication]
- *     security:
- *       - bearerAuth: []
- *     responses:
- *       200:
- *         description: User profile data
- */
 router.get('/profile', authenticate, async (req: Request, res: Response) => {
   try {
     const profile = await bajajApiClient.getUserProfile();
@@ -100,7 +51,6 @@ router.get('/profile', authenticate, async (req: Request, res: Response) => {
     });
   } catch (error: any) {
     logger.error('Profile fetch error:', error);
-    // Return mock profile for development
     res.json({
       status: 'success',
       data: {
@@ -115,6 +65,4 @@ router.get('/profile', authenticate, async (req: Request, res: Response) => {
     });
   }
 });
-
 export default router;
-

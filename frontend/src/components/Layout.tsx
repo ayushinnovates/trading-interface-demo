@@ -22,13 +22,10 @@ import ShoppingCartIcon from '@mui/icons-material/ShoppingCart';
 import ReceiptIcon from '@mui/icons-material/Receipt';
 import AccountBalanceWalletIcon from '@mui/icons-material/AccountBalanceWallet';
 import { useNavigate, useLocation } from 'react-router-dom';
-
 const drawerWidth = 250;
-
 interface LayoutProps {
   children: React.ReactNode;
 }
-
 const menuItems = [
   { text: 'Dashboard', icon: <DashboardIcon />, path: '/' },
   { text: 'Instruments', icon: <TrendingUpIcon />, path: '/instruments' },
@@ -36,18 +33,15 @@ const menuItems = [
   { text: 'Trades', icon: <ReceiptIcon />, path: '/trades' },
   { text: 'Portfolio', icon: <AccountBalanceWalletIcon />, path: '/portfolio' },
 ];
-
 export default function Layout({ children }: LayoutProps) {
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down('md'));
   const [mobileOpen, setMobileOpen] = useState(false);
   const navigate = useNavigate();
   const location = useLocation();
-
   const handleDrawerToggle = () => {
     setMobileOpen(!mobileOpen);
   };
-
   const drawer = (
     <Box sx={{ height: '100%', backgroundColor: '#FFFFFF', borderRight: '1px solid rgba(0,0,0,0.08)' }}>
       <Toolbar
@@ -109,7 +103,6 @@ export default function Layout({ children }: LayoutProps) {
       </List>
     </Box>
   );
-
   return (
     <Box sx={{ display: 'flex' }}>
       <CssBaseline />
@@ -190,4 +183,3 @@ export default function Layout({ children }: LayoutProps) {
     </Box>
   );
 }
-

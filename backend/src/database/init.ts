@@ -3,15 +3,11 @@ import { promisify } from 'util';
 import { logger } from '../utils/logger';
 import path from 'path';
 import fs from 'fs';
-
 const DB_PATH = process.env.DB_PATH || './data/trading.db';
-
-// Ensure data directory exists
 const dbDir = path.dirname(DB_PATH);
 if (!fs.existsSync(dbDir)) {
   fs.mkdirSync(dbDir, { recursive: true });
 }
-
 export const db = new sqlite3.Database(DB_PATH, (err) => {
   if (err) {
     logger.error('Database connection error:', err);
@@ -19,15 +15,11 @@ export const db = new sqlite3.Database(DB_PATH, (err) => {
   }
   logger.info('Connected to SQLite database');
 });
-
-// Promisify database methods
 export const dbRun = promisify(db.run.bind(db));
 export const dbGet = promisify(db.get.bind(db));
 export const dbAll = promisify(db.all.bind(db));
-
 export const initializeDatabase = async () => {
   try {
-    // Create instruments table
     await dbRun(`
       CREATE TABLE IF NOT EXISTS instruments (
         id INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -38,8 +30,6 @@ export const initializeDatabase = async () => {
         createdAt DATETIME DEFAULT CURRENT_TIMESTAMP
       )
     `);
-
-    // Create orders table
     await dbRun(`
       CREATE TABLE IF NOT EXISTS orders (
         id TEXT PRIMARY KEY,
@@ -58,8 +48,6 @@ export const initializeDatabase = async () => {
         updatedAt DATETIME DEFAULT CURRENT_TIMESTAMP
       )
     `);
-
-    // Create trades table
     await dbRun(`
       CREATE TABLE IF NOT EXISTS trades (
         id TEXT PRIMARY KEY,
@@ -74,8 +62,6 @@ export const initializeDatabase = async () => {
         FOREIGN KEY (orderId) REFERENCES orders(id)
       )
     `);
-
-    // Create portfolio table
     await dbRun(`
       CREATE TABLE IF NOT EXISTS portfolio (
         id INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -90,8 +76,6 @@ export const initializeDatabase = async () => {
         UNIQUE(userId, symbol)
       )
     `);
-
-    // Create wallet table for virtual cash
     await dbRun(`
       CREATE TABLE IF NOT EXISTS wallet (
         id INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -102,18 +86,12 @@ export const initializeDatabase = async () => {
         updatedAt DATETIME DEFAULT CURRENT_TIMESTAMP
       )
     `);
-
-    // Initialize wallet for default user
     await dbRun(`
       INSERT OR IGNORE INTO wallet (userId, availableBalance)
       VALUES ('MOCK_USER_001', 1000000)
     `);
-
-    // Insert sample instruments if table is empty
     const existingInstruments: any = await dbAll('SELECT COUNT(*) as count FROM instruments');
     if (existingInstruments[0].count === 0) {
-      // Popular Indian stocks - prices will be updated with real market data
-      // Using BSE exchange as requested
       const sampleInstruments = [
         { symbol: 'RELIANCE', exchange: 'BSE', instrumentType: 'EQUITY', lastTradedPrice: 2450.50 },
         { symbol: 'TCS', exchange: 'BSE', instrumentType: 'EQUITY', lastTradedPrice: 3450.75 },
@@ -136,7 +114,6 @@ export const initializeDatabase = async () => {
         { symbol: 'AXISBANK', exchange: 'BSE', instrumentType: 'EQUITY', lastTradedPrice: 1100.00 },
         { symbol: 'ONGC', exchange: 'BSE', instrumentType: 'EQUITY', lastTradedPrice: 250.00 },
       ];
-
       for (const instrument of sampleInstruments) {
         await dbRun(
           'INSERT INTO instruments (symbol, exchange, instrumentType, lastTradedPrice) VALUES (?, ?, ?, ?)',
@@ -145,7 +122,6 @@ export const initializeDatabase = async () => {
       }
       logger.info('Sample instruments inserted');
     }
-
     logger.info('Database initialized successfully');
   } catch (error) {
     logger.error('Database initialization error:', error);

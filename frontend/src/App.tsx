@@ -7,19 +7,17 @@ import Instruments from './pages/Instruments';
 import Orders from './pages/Orders';
 import Trades from './pages/Trades';
 import Portfolio from './pages/Portfolio';
-
-// Minimalistic light theme
 const theme = createTheme({
   palette: {
     mode: 'light',
     primary: {
-      main: '#FF6B35', // Bajaj Orange
+      main: '#FF6B35',
       light: '#FF8C5A',
       dark: '#E55A2B',
       contrastText: '#fff',
     },
     secondary: {
-      main: '#004E89', // Bajaj Blue
+      main: '#004E89',
       light: '#3375A3',
       dark: '#003566',
       contrastText: '#fff',
@@ -80,7 +78,6 @@ const theme = createTheme({
     },
   },
 });
-
 function App() {
   return (
     <ThemeProvider theme={theme}>
@@ -99,6 +96,4 @@ function App() {
     </ThemeProvider>
   );
 }
-
 export default App;
-

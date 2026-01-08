@@ -13,14 +13,12 @@ import ReceiptIcon from '@mui/icons-material/Receipt';
 import AccountBalanceWalletIcon from '@mui/icons-material/AccountBalanceWallet';
 import WalletIcon from '@mui/icons-material/Wallet';
 import { apiService, PortfolioHolding } from '../services/api';
-
 interface StatCardProps {
   title: string;
   value: string | number;
   icon: React.ReactNode;
   color: string;
 }
-
 function StatCard({ title, value, icon, color }: StatCardProps) {
   return (
     <Card>
@@ -53,7 +51,6 @@ function StatCard({ title, value, icon, color }: StatCardProps) {
     </Card>
   );
 }
-
 export default function Dashboard() {
   const [loading, setLoading] = useState(true);
   const [stats, setStats] = useState({
@@ -63,7 +60,6 @@ export default function Dashboard() {
     portfolioValue: 0,
     availableBalance: 0,
   });
-
   useEffect(() => {
     const fetchStats = async () => {
       try {
@@ -74,12 +70,10 @@ export default function Dashboard() {
           apiService.getPortfolio(),
           apiService.getWallet().catch(() => ({ availableBalance: 0, totalInvested: 0 })),
         ]);
-
         const portfolioValue = portfolio.reduce(
           (sum: number, holding: PortfolioHolding) => sum + holding.currentValue,
           0
         );
-
         setStats({
           totalInstruments: instruments.length,
           totalOrders: orders.length,
@@ -93,13 +87,10 @@ export default function Dashboard() {
         setLoading(false);
       }
     };
-
     fetchStats();
-    // Refresh every 10 seconds
     const interval = setInterval(fetchStats, 10000);
     return () => clearInterval(interval);
   }, []);
-
   if (loading) {
     return (
       <Box display="flex" justifyContent="center" alignItems="center" minHeight="400px">
@@ -107,7 +98,6 @@ export default function Dashboard() {
       </Box>
     );
   }
-
   return (
     <Box>
       <Typography variant="h4" gutterBottom sx={{ mb: 4, fontWeight: 600 }}>
@@ -164,4 +154,3 @@ export default function Dashboard() {
     </Box>
   );
 }
-
