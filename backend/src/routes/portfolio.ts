@@ -12,7 +12,7 @@ router.get('/', authenticate, async (req: Request, res: Response) => {
     let portfolio: any[] = [];
     try {
       portfolio = await bajajApiClient.getPortfolio();
-      if (portfolio && portfolio.length > 0) {
+      if (portfolio && Array.isArray(portfolio) && portfolio.length > 0 && typeof portfolio[0] === 'object' && !portfolio[0].includes) {
         logger.info(`Fetched ${portfolio.length} portfolio items from Bajaj API`);
         return res.json({
           status: 'success',

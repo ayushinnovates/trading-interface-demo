@@ -23,11 +23,11 @@ export class BajajApiClient {
   private clientSecret: string;
   private redirectUrl: string;
   constructor() {
-    this.baseUrl = process.env.BAJAJ_API_BASE_URL || 'https:
-    this.bridgeLinkUrl = process.env.BAJAJ_BRIDGELINK_URL || 'https:
+    this.baseUrl = process.env.BAJAJ_API_BASE_URL || 'https://apitrading.bajajbroking.in';
+    this.bridgeLinkUrl = process.env.BAJAJ_BRIDGELINK_URL || 'https://bridgelink.bajajbroking.in';
     this.clientId = process.env.CLIENT_ID || '';
     this.clientSecret = process.env.CLIENT_SECRET || '';
-    this.redirectUrl = process.env.REDIRECT_URL || 'http:
+    this.redirectUrl = process.env.REDIRECT_URL || 'http://localhost:3000';
     this.client = axios.create({
       baseURL: this.baseUrl,
       headers: {
@@ -127,7 +127,10 @@ export class BajajApiClient {
   async getPortfolio(): Promise<any[]> {
     try {
       const response = await this.client.get('/portfolio');
-      return response.data.data || response.data || [];
+      if (response.data && typeof response.data === 'object' && !response.data.includes) {
+        return response.data.data || response.data || [];
+      }
+      return [];
     } catch (error: any) {
       logger.warn('Failed to fetch portfolio from Bajaj API, using local data:', error.message);
       return [];

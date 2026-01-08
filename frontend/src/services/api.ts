@@ -1,5 +1,5 @@
 import axios from 'axios';
-const API_BASE_URL = import.meta.env.VITE_API_URL || 'http:
+const API_BASE_URL = import.meta.env.VITE_API_URL || 'http://localhost:3002';
 const api = axios.create({
   baseURL: API_BASE_URL,
   headers: {
@@ -7,10 +7,8 @@ const api = axios.create({
   },
 });
 api.interceptors.request.use((config) => {
-  const token = localStorage.getItem('authToken');
-  if (token) {
-    config.headers.Authorization = `Bearer ${token}`;
-  }
+  const token = localStorage.getItem('authToken') || 'mock_token';
+  config.headers.Authorization = `Bearer ${token}`;
   return config;
 });
 export interface Instrument {
@@ -34,9 +32,10 @@ export interface Order {
   orderStyle: 'MARKET' | 'LIMIT';
   quantity: number;
   price?: number;
-  status: 'NEW' | 'PLACED' | 'EXECUTED' | 'CANCELLED';
+  status: 'NEW' | 'PLACED' | 'PARTIALLY_EXECUTED' | 'EXECUTED' | 'CANCELLED';
   executedPrice?: number;
   executedQuantity?: number;
+  remainingQuantity?: number;
   createdAt: string;
   updatedAt: string;
 }

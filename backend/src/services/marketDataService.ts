@@ -31,7 +31,7 @@ export class MarketDataService {
     }
     if (this.alphaVantageApiKey && this.alphaVantageApiKey !== 'demo') {
       try {
-        const response = await axios.get('https:
+        const response = await axios.get('https://www.alphavantage.co/query', {
           params: {
             function: 'GLOBAL_QUOTE',
             symbol: this.formatSymbol(symbol, exchange),
@@ -63,7 +63,7 @@ export class MarketDataService {
   private async getQuoteFromYahoo(symbol: string, exchange: string): Promise<MarketData | null> {
     try {
       const yahooSymbol = exchange === 'NSE' ? `${symbol}.NS` : `${symbol}.BO`;
-      const response = await axios.get(`https:
+      const response = await axios.get(`https://query1.finance.yahoo.com/v8/finance/chart/${yahooSymbol}`, {
         params: {
           interval: '1d',
           range: '1d',

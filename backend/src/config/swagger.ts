@@ -10,12 +10,12 @@ const options: swaggerJsdoc.Options = {
       description: 'Wrapper SDK for Bajaj Broking Trading APIs',
       contact: {
         name: 'Bajaj Broking',
-        url: 'https:
+        url: 'https://localhost:3002'
       },
     },
     servers: [
       {
-        url: `http:
+        url: `http://localhost:${process.env.PORT || 3001}`,
         description: 'Development server',
       },
     ],
@@ -34,4 +34,9 @@ const options: swaggerJsdoc.Options = {
       },
     ],
   },
-  apis: ['./src/routes
+  apis: ['./src/routes/*.ts'],
+};
+export const setupSwagger = (app: Express) => {
+  const swaggerSpec = swaggerJsdoc(options);
+  app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerSpec));
+};
